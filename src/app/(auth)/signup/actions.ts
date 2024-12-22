@@ -89,8 +89,14 @@ export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
       sessionCookie.value,
       sessionCookie.attributes,
     );
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    return redirect("/");
+
+    try {
+      return redirect("/");
+    } catch (error) {
+      console.log(error);
+      console.error(error); // Log error lainnya
+      return redirect("/");
+    }
   } catch (error) {
     console.log(error);
     if (isRedirectError(error)) throw error;
