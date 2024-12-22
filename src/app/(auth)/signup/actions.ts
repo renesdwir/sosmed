@@ -75,11 +75,11 @@ export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
         },
       });
 
-      await streamServerClient.upsertUser({
-        id: userId,
-        name: username,
-        username,
-      });
+      // await streamServerClient.upsertUser({
+      //   id: userId,
+      //   name: username,
+      //   username,
+      // });
     });
 
     const session = await lucia.createSession(userId, {});
@@ -90,13 +90,7 @@ export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
       sessionCookie.attributes,
     );
 
-    try {
-      return redirect("/");
-    } catch (error) {
-      console.log(error);
-      console.error(error); // Log error lainnya
-      return redirect("/");
-    }
+    return redirect("/");
   } catch (error) {
     console.log(error);
     if (isRedirectError(error)) throw error;
