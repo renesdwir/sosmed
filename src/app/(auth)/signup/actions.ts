@@ -90,7 +90,7 @@ export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
       sessionCookie.attributes,
     );
 
-    return redirect("/");
+    redirect("/");
   } catch (error) {
     console.log(error);
     if (isRedirectError(error)) throw error;
