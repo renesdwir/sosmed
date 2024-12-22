@@ -75,15 +75,17 @@ export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
         },
       });
 
-      // await streamServerClient.upsertUser({
-      //   id: userId,
-      //   name: username,
-      //   username,
-      // });
+      await streamServerClient.upsertUser({
+        id: userId,
+        name: username,
+        username,
+      });
     });
 
     const session = await lucia.createSession(userId, {});
+    console.log(session);
     const sessionCookie = lucia.createSessionCookie(session.id);
+    console.log(sessionCookie);
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
