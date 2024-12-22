@@ -11,7 +11,9 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import bcrypt from "bcryptjs";
 
-export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
+export async function signUp(
+  payload: SignUpValue,
+): Promise<{ error: string; success: boolean }> {
   try {
     const { email, password, username } = signUpSchema.parse(payload);
 
@@ -45,6 +47,7 @@ export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
     });
     if (existingUsername) {
       return {
+        success: false,
         error: "Username already taken",
       };
     }
@@ -60,6 +63,7 @@ export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
     });
     if (existingEmail) {
       return {
+        success: false,
         error: "Email already taken",
       };
     }
@@ -83,20 +87,22 @@ export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
     });
 
     const session = await lucia.createSession(userId, {});
-    console.log(session);
     const sessionCookie = lucia.createSessionCookie(session.id);
-    console.log(sessionCookie);
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
       sessionCookie.attributes,
     );
 
-    redirect("/");
+    return {
+      success: true,
+      error: "",
+    };
+    // redirect("/");
   } catch (error) {
-    console.log(error);
     if (isRedirectError(error)) throw error;
     return {
+      success: false,
       error: "Something went wrong. Please try again",
     };
   }

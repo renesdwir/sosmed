@@ -17,10 +17,13 @@ import { useState, useTransition } from "react";
 import { signUp } from "./actions";
 import { PasswordInput } from "@/components/app/PasswordInput";
 import LoadingButton from "@/components/app/LoadingButton";
+import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
   const form = useForm<SignUpValue>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -33,8 +36,9 @@ export default function SignUpForm() {
   async function onSubmit(values: SignUpValue) {
     setError(undefined);
     startTransition(async () => {
-      const { error } = await signUp(values);
-      if (error) setError(error);
+      const { error, success } = await signUp(values);
+      if (!success) setError(error);
+      else router.push("/");
     });
   }
   return (
