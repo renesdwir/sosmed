@@ -4,11 +4,12 @@ import prisma from "@/lib/prisma";
 import streamServerClient from "@/lib/stream";
 import { signUpSchema, SignUpValue } from "@/lib/validation";
 // import { hash } from "@node-rs/argon2";
-import argon2 from "argon2";
+// import argon2 from "argon2";
 import { generateIdFromEntropySize } from "lucia";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import bcrypt from "bcryptjs";
 
 export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
   try {
@@ -22,14 +23,15 @@ export async function signUp(payload: SignUpValue): Promise<{ error: string }> {
     //   parallelism: 1,
     // });
 
-    const passwordHash = await argon2.hash(password, {
-      type: argon2.argon2id, // Gunakan Argon2id untuk keamanan optimal
-      memoryCost: 19456, // Sesuai konfigurasi sebelumnya
-      timeCost: 2, // Iterasi
-      parallelism: 1, // Paralelisme
-      hashLength: 32, // Panjang output hash
-    });
+    // const passwordHash = await argon2.hash(password, {
+    //   type: argon2.argon2id, // Gunakan Argon2id untuk keamanan optimal
+    //   memoryCost: 19456, // Sesuai konfigurasi sebelumnya
+    //   timeCost: 2, // Iterasi
+    //   parallelism: 1, // Paralelisme
+    //   hashLength: 32, // Panjang output hash
+    // });
 
+    const passwordHash = await bcrypt.hash(password, 10);
     const userId = generateIdFromEntropySize(10);
 
     // checking username

@@ -4,7 +4,8 @@ import prisma from "@/lib/prisma";
 import { signInSchema, SignInValue } from "@/lib/validation";
 import { isRedirectError } from "next/dist/client/components/redirect";
 // import { verify } from "@node-rs/argon2";
-import argon2 from "argon2";
+// import argon2 from "argon2";
+import bcrypt from "bcryptjs";
 import { lucia } from "@/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -38,9 +39,13 @@ export async function signIn(
     //     parallelism: 1,
     //   },
     // );
-    const validationPassword = await argon2.verify(
-      existingUsername.passwordHash,
+    // const validationPassword = await argon2.verify(
+    //   existingUsername.passwordHash,
+    //   password,
+    // );
+    const validationPassword = await bcrypt.compare(
       password,
+      existingUsername.passwordHash,
     );
     if (!validationPassword) return { error: "Invalid username or password" };
 
