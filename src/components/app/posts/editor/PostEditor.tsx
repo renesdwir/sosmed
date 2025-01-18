@@ -18,7 +18,6 @@ import Image from "next/image";
 import { useDropzone } from "@uploadthing/react";
 
 export default function PostEditor() {
-  console.log("clientt");
   const { user } = useSession();
   const mutation = useSubmitPostMutation();
 

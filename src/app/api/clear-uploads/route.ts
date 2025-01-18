@@ -19,12 +19,7 @@ export async function GET(req: Request) {
       select: { id: true, url: true },
     });
 
-    new UTApi().deleteFiles(
-      unusedMedia.map(
-        (m) =>
-          m.url.split(`/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`)[1],
-      ),
-    );
+    new UTApi().deleteFiles(unusedMedia.map((m) => m.url.split(`/f/`)[1]));
 
     await prisma.media.deleteMany({
       where: {
